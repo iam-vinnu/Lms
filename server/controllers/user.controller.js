@@ -67,7 +67,9 @@ export const login = async (req,res)=>{
                     message:"Incorrect Password"
                 })
               };
-    } catch (error) {
+
         
+    } catch (error) {
+        console.log("Error in Login" , error);
     }
 }
