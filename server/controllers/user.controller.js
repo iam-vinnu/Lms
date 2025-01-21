@@ -1,7 +1,8 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../utils/generateToken.js";
 
-export const resister = async (req , res) =>{
+export const register = async (req , res) =>{
      try {
         const {name , email , password} = req.body ;
 
@@ -68,8 +69,12 @@ export const login = async (req,res)=>{
                 })
               };
 
-        
+        generateToken(res,user,`welcome back ${user.name}`);
+
+
+
+
     } catch (error) {
-        console.log("Error in Login" , error);
+        console.log("Failed to Login" , error);
     }
 }
