@@ -32,7 +32,7 @@ export const register = async (req , res) =>{
         return res.status(201).json({
             success: true,
             message:"Account created successfully"
-        })
+        })  
      } catch (error) {
         console.log("Error in Resister " ,error );
         
@@ -78,3 +78,4 @@ export const login = async (req,res)=>{
         console.log("Failed to Login" , error);
     }
 }
+
