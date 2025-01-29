@@ -1,5 +1,5 @@
 //YXOUHVSaaiuDBGCr
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -17,7 +17,9 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { Eye, EyeClosed, EyeOff } from 'lucide-react'
+import { Eye, EyeClosed, EyeOff, Loader2 } from 'lucide-react'
+import { useLoginUserMutation, useRegisterUserMutation } from '@/features/api/authApi'
+import { toast } from 'sonner'
 
 const Login = () => {
     const [password, setPassword] = useState(false);
@@ -26,16 +28,34 @@ const Login = () => {
         email: '',
         password: ''
     });
-    const[loginInput , setLoginInput] = useState({
-        email :'',
-        password:''
+    const [loginInput, setLoginInput] = useState({
+        email: '',
+        password: ''
     });
 
-    const handleInputChange = (e) => {
-        setSignupInput({ ...signupInput, [e.target.name]: e.target.value })
-    };
-    const handleLoginChange =(e)=>{
-        setLoginInput({ ...loginInput , [e.target.name] : e.target.value})
+    const [registerUser,
+        {
+            data: registerData,
+            error: registerError,
+            isLoading: registerLoading,
+            isSuccess: registersuccess
+
+        }] = useRegisterUserMutation();
+    const [loginUser,
+        { data: loginData,
+            error: loginError,
+            isLoading: loginLoading,
+            isSuccess: loginSuccess
+        }] = useLoginUserMutation();
+
+
+    const changeInputHandler = (e, type) => {
+        const { name, value } = e.target;
+        if (type === "signup") {
+            setSignupInput({ ...signupInput, [name]: value });
+        } else {
+            setLoginInput({ ...loginInput, [name]: value });
+        }
     };
 
     const checkPassword = () => {
@@ -46,11 +66,39 @@ const Login = () => {
         }
     }
 
-    const handleSubmit =(type)=>{
-        const inputData = type === "signup" ? signupInput : loginInput ;
-        console.log(inputData);
-        
-        }
+    const handleSubmit = async (type) => {
+        const inputData = type === "signup" ? signupInput : loginInput;
+        const action = type === "signup" ? registerUser : loginUser;
+        await action(inputData);
+
+    }
+
+    useEffect(() => {
+       if(registersuccess && registerData){
+        setSignupInput('');
+        toast.success(registerData.message || "Signup Successful")
+       };
+
+       if(registerError){
+        toast.error(registerData.data.message || "Signup Failed")
+       };
+
+       if(loginSuccess && loginData){
+        setLoginInput('');
+        toast.success(loginData.message || "Login Successful")
+       };
+
+       if(loginError){
+        toast.error(loginData.data.message || "Login Failed")
+       }
+    }, [loginLoading,
+        registerLoading,
+        loginData,  
+        registerData,
+        loginSuccess,  
+        registersuccess])
+
+
     return (
         <div className='max-w-6xl mx-auto h-[100vh]'>
             <div className='flex justify-center items-center h-[100%]'>
@@ -75,7 +123,7 @@ const Login = () => {
                                         type="text"
                                         required="true"
                                         value={signupInput.name}
-                                        onChange={handleInputChange} />
+                                        onChange={(e) => changeInputHandler(e, "signup")} />
                                 </div>
                                 <div className="space-y-1">
                                     <Label htmlFor="email">Email</Label>
@@ -84,7 +132,7 @@ const Login = () => {
                                         type="email"
                                         required="true"
                                         value={signupInput.email}
-                                        onChange={handleInputChange} />
+                                        onChange={(e) => changeInputHandler(e, "signup")} />
                                 </div>
                                 <div className="space-y-1">
                                     <Label htmlFor="password">Password</Label>
@@ -92,8 +140,8 @@ const Login = () => {
                                         <Input id="password"
                                             type={password ? "text" : "password"}
                                             name="password"
-                                            value={signupInput.password}  
-                                            onChange={handleInputChange} />
+                                            value={signupInput.password}
+                                            onChange={(e) => changeInputHandler(e, "signup")} />
                                         {
                                             password ? <Eye
                                                 onClick={checkPassword}
@@ -107,7 +155,17 @@ const Login = () => {
 
                             </CardContent>
                             <CardFooter>
-                                <Button onClick={(e)=>{handleSubmit("signup")}} >Signup</Button>
+                                <Button
+                                    disabled={registerLoading}
+                                    onClick={(e) => { handleSubmit("signup") }} >
+                                    {
+                                        registerLoading ? (
+                                            <>
+                                                <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please Wait
+                                            </>
+                                        ) : "Signup"
+                                    }
+                                </Button>
                             </CardFooter>
                         </Card>
                     </TabsContent>
@@ -123,21 +181,21 @@ const Login = () => {
                                 <div className="space-y-1">
                                     <Label htmlFor="current">Email</Label>
                                     <Input type="email"
-                                           name = 'email'
-                                           required="true"
-                                           value={loginInput.email}
-                                           onChange={handleLoginChange} />
+                                        name='email'
+                                        required="true"
+                                        value={loginInput.email}
+                                        onChange={(e) => changeInputHandler(e, "login")} />
                                 </div>
                                 <div className="space-y-1">
                                     <Label htmlFor="new">Password</Label>
-                                   <div className='flex items-center gap-2'>
-                                   <Input id="new" 
-                                           type={password ? "text" : "password"}
-                                           name="password"
-                                           value={loginInput.password}
-                                           onChange={handleLoginChange}
-                                           />
-                                            {
+                                    <div className='flex items-center gap-2'>
+                                        <Input id="new"
+                                            type={password ? "text" : "password"}
+                                            name="password"
+                                            value={loginInput.password}
+                                            onChange={(e) => changeInputHandler(e, "login")}
+                                        />
+                                        {
                                             password ? <Eye
                                                 onClick={checkPassword}
                                                 className='cursor-pointer' />
@@ -145,11 +203,21 @@ const Login = () => {
                                                     onClick={checkPassword}
                                                     className='cursor-pointer' />
                                         }
-                                   </div>
+                                    </div>
                                 </div>
                             </CardContent>
                             <CardFooter>
-                                <Button onClick={(e)=>{handleSubmit("login")}} >Login</Button>
+                                <Button
+                                    disabled={loginLoading}
+                                    onClick={(e) => { handleSubmit("login") }} >
+                                    {
+                                        loginLoading ? (
+                                            <>
+                                                <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please Wait
+                                            </>
+                                        ) : "Login"
+                                    }
+                                </Button>
                             </CardFooter>
                         </Card>
                     </TabsContent>
