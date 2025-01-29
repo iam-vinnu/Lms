@@ -76,6 +76,13 @@ export const login = async (req,res)=>{
 
     } catch (error) {
         console.log("Failed to Login" , error);
+        return res.status(500).json({
+            success : false ,
+            message : "Failed to login"
+        })
     }
 }
 
+export const logout = async (req,res)=>{
+
+}
