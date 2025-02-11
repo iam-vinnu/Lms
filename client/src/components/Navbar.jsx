@@ -1,4 +1,4 @@
-import { School } from 'lucide-react'
+import { Menu, School } from 'lucide-react'
 import React from 'react'
 import { Button } from "@/components/ui/button"
 import {
@@ -23,13 +23,28 @@ import {
 } from "@/components/ui/avatar"
 import DarkMode from '@/DarkMode'
 
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Link } from 'react-router-dom'
+
 
 const Navbar = () => {
 
-  const user = false;
+  const user = true;
 
   return (
-    <div className='h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10'>
+    <div className='h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10 shadow-xl'>
+      {/* for desktop */}
       <div className='max-w-6xl mx-auto hidden md:flex justify-between items-center gap-10 h-full'>
 
         <div className='flex items-center gap-2 cursor-pointer'>
@@ -54,11 +69,17 @@ const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
-                      My Learning
+                      <Link to={"/my-learning"}>
+                        My Learning
+
+                      </Link>
 
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Edit Profile
+                      <Link to={"profile"}>
+
+                        Edit Profile
+                      </Link>
 
                     </DropdownMenuItem>
                     <DropdownMenuItem>
@@ -82,11 +103,52 @@ const Navbar = () => {
               </div>
             )
           }
-            <DarkMode/>
+          <DarkMode />
         </div>
+      </div>
+
+      {/*    Mobile UI      */}
+      <div className='flex md:hidden items-center justify-between px-4 h-full'>
+        <h1 className='font-extrabold text-2xl'>E-Learning</h1>
+        <MobileNavbar />
       </div>
     </div>
   )
 }
 
 export default Navbar
+
+
+
+const MobileNavbar = () => {
+  const role = "instructor";
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button size="icon" className="rounded-full bg-gray-200 hover:bg-gray-200" variant="outline">
+          <Menu />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="flex flex-col" >
+        <SheetHeader className="flex flex-row items-center justify-between mt-2">
+          <SheetTitle>Edit profile</SheetTitle>
+          <DarkMode />
+        </SheetHeader>
+        <nav className='flex flex-col space-y-4'>
+          <span>My Learning</span>
+          <span>Edit Profile</span>
+          <span>Log out</span>
+        </nav>
+        {
+          role === "instructor" && (
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button type="submit">Dashboard</Button>
+              </SheetClose>
+            </SheetFooter>
+          )
+        }
+      </SheetContent>
+    </Sheet>
+  )
+}
