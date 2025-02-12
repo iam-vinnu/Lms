@@ -109,7 +109,10 @@ const Navbar = () => {
 
       {/*    Mobile UI      */}
       <div className='flex md:hidden items-center justify-between px-4 h-full'>
-        <h1 className='font-extrabold text-2xl'>E-Learning</h1>
+        <div className='flex items-center gap-2'>
+          <School size={"30"} />
+          <h1 className='font-extrabold text-2xl'>E-Learning</h1>
+        </div>
         <MobileNavbar />
       </div>
     </div>
