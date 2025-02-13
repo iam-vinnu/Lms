@@ -15,7 +15,9 @@ const Profile = () => {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [profilePhoto, setProfilePhoto] = useState("");
-    const { data, isLoading } = useLoadUserQuery();
+    const { data, isLoading , refetch } = useLoadUserQuery();
+    console.log(data);
+    
     const [updateUser, { data: updateUserData, isLoading: updateUserIsLoading,isError, error , isSuccess }] = useUpdateUserMutation();
     
     const onChangeHandler = (e) => {
@@ -37,9 +39,14 @@ const Profile = () => {
         await updateUser(formData);
         
     };
+    useEffect(() => {
+        refetch();
+      }, []);
+    
     
     useEffect(()=>{
         if(isSuccess){
+            refetch();
             toast.success(data.message || "Profile updated");
         }
         if(isError){
@@ -48,14 +55,15 @@ const Profile = () => {
     },[error,updateUserData,isSuccess,isError]);
 
     if (isLoading) return <h1>Profile is isLoading</h1>
-    const { user } = data;
+    const {user} = data ;
+
     return (
         <div className='max-w-4xl mx-auto my-24 px-4 '>
             <h1 className='font-bold text-2xl text-center md:text-left'>PROFILE</h1>
             <div className='flex flex-col md:flex-row items-center md:items-start gap-8 my-5'>
                 <div className='flex flex-col items-center' >
                     <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
-                        <AvatarImage src={user?.photoUrl || "https://github.com/shadcn.png"} alt="@shadcn" />
+                        <AvatarImage src={user?.photoURL || "https://github.com/shadcn.png"} alt="@shadcn" />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                 </div>

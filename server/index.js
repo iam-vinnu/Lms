@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cors from "cors"
 import connectDB from './database/db.js';
 import userRoute from './routs/user.rout.js'
+import courseRoute from './routs/course.rout.js'
 import cookieParser from 'cookie-parser';
 dotenv.config({});
 
@@ -17,6 +18,7 @@ app.use(cors({
 }));
 
 app.use('/api/v1/user',userRoute);
+app.use('/api/v1/course',courseRoute);
 
 
 
