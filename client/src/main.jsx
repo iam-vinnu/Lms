@@ -10,7 +10,9 @@ import FadeLoader from "react-spinners/FadeLoader";
 
 const Custom = ({ children }) => {
   const { isLoading } = useLoadUserQuery();
-  return (<>{isLoading ?  <FadeLoader  heightUnit={150} />:<>{children} </>}</> )
+  return (<>{isLoading ? <div className='flex items-center justify-center h-[100vh]'>
+    <FadeLoader heightUnit={150} />
+  </div> : <>{children} </>}</>)
 }
 
 createRoot(document.getElementById('root')).render(
