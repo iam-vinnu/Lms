@@ -7,12 +7,12 @@ function Sidebar() {
         <div className='flex'>
             <div className='hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r-gray-300 dark:border-gray-700 bg-[#f0f0f0] p-5 sticky  top-0 h-screen '>
                 <div className='my-20 space-y-4'>
-                    <Link to={"/admin/dashboard"}
+                    <Link to={"dashboard"}
                         className='flex items-center gap-3'>
                         <ChartNoAxesColumn size={22} />
                         <h1>Dashboard</h1>
                     </Link>
-                    <Link to={"/admin/courses"}
+                    <Link to={"course"}
                         className='flex items-center gap-3'>
                         <SquareLibrary size={22} />
                         <h1>Courses</h1>
