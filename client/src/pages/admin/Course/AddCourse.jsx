@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Select,
@@ -14,18 +14,32 @@ import {
 import { Button } from '@/components/ui/button'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
+import { useCreateCourseMutation } from '@/features/api/courseApi'
+import { toast } from 'sonner'
 
 function AddCourse() {
   const [courseTitle , setCourseTitle] = useState("");
   const [catagory , setCatagory] = useState("");
+
+  const [createCourse , {data , isLoading , error , isSuccess}] = useCreateCourseMutation();
+
+
+
   const navigate = useNavigate();
-  const isLoading = false ;
   const getSelectedCatagory = (value) => {
     setCatagory(value);
   }
   const createCourseHandler = async()=>{
-    console.log(courseTitle,catagory)
+     await createCourse({courseTitle , catagory});
   }
+  
+  useEffect(()=>{
+    if(isSuccess){
+      toast.success(data?.message || "Course Created");
+      navigate('/admin/course');
+    }
+  },[isSuccess , error])
+
   return (
     <div className='flex-1 mx-10'>
       <div className='mb-4'>
