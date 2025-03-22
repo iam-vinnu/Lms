@@ -19,7 +19,7 @@ import { toast } from 'sonner'
 
 function AddCourse() {
   const [courseTitle , setCourseTitle] = useState("");
-  const [catagory , setCatagory] = useState("");
+  const [category , setCategory] = useState("");
 
   const [createCourse , {data , isLoading , error , isSuccess}] = useCreateCourseMutation();
 
@@ -27,10 +27,10 @@ function AddCourse() {
 
   const navigate = useNavigate();
   const getSelectedCatagory = (value) => {
-    setCatagory(value);
+    setCategory(value);
   }
   const createCourseHandler = async()=>{
-     await createCourse({courseTitle , catagory});
+     await createCourse({courseTitle , category});
   }
   
   useEffect(()=>{
@@ -59,10 +59,10 @@ function AddCourse() {
           />
         </div>
         <div>
-          <Label>Catagory</Label>
+          <Label>Category</Label>
           <Select onValueChange={getSelectedCatagory}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a catagory" />
+              <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
