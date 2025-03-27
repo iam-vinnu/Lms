@@ -25,9 +25,9 @@ const CourseTab = () => {
   });
   const {data:courseData,isLoading:courseLoading} = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true});
 
-  const course = courseData?.course
   useEffect(()=>{
-    if(course){
+    if(courseData?.course){
+      const course = courseData?.course;
       setInput({
         courseTitle:course.courseTitle,
         subTitle: course.subTitle,
@@ -38,7 +38,7 @@ const CourseTab = () => {
         courseThumbnail:""
       })
     }
-  },[course])
+  },[courseData])
 
   const [previewThumbnail, setPreviewThumbnail] = useState("");
   const [editCourse,{data,isLoading,isSuccess,error}] = useEditCourseMutation();
@@ -89,7 +89,8 @@ const CourseTab = () => {
     }
   },[isSuccess,error]);
   const isPublished = true;
-  
+
+  if(courseLoading) return <Loader2 className='h-4 w-4 animate-spin'/>
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
