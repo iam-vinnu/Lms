@@ -5,6 +5,10 @@ const lectureSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+     courseTitle:{
+       type:mongoose.Schema.Types.ObjectId,
+       ref:"Course"
+    },
     videoUrl:{
         type:String
     },
