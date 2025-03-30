@@ -12,16 +12,19 @@ import {
 } from "@/components/ui/table"
 import { useGetCreatorCourseQuery } from '@/features/api/courseApi'
 import { Edit } from 'lucide-react'
-import React from 'react'
+import React,{useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 
 
 const CourseTable = () => {
-  const {data , isLoading} = useGetCreatorCourseQuery();
+  const {data , isLoading , refetch} = useGetCreatorCourseQuery();
   const navigate = useNavigate();
   if (isLoading) return <h1>Loading......</h1>
-  
+
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
   
   return (
     <div className=''>

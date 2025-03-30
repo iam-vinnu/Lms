@@ -13,7 +13,7 @@ const CreateLecture = () => {
   const { courseId } = useParams();
 
   const [createLecture, { data, isLoading, isSuccess, error }] = useCreateLectureMutation();
-  const { data: lectureData, isLoading: lectureLoading, error: lectureError ,refetch } = useGetLectureQuery(courseId);
+  const { data: lectureData, isLoading: lectureLoading, error: lectureError } = useGetLectureQuery(courseId);
   console.log(lectureData);
 
 
@@ -23,7 +23,6 @@ const CreateLecture = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      refetch();
       toast.success(data?.message);
     }
     if (error) {
