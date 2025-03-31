@@ -180,6 +180,15 @@ export  const getLecture = async (req,res) => {
 export const editLecture = async (req,res) => {
     try {
           const {lectureTitle,videoInfo,isPreviewFree} = req.body;
+          const {courseId , lectureId} = req.params;
+          const lecture = await Lecture.findById(lectureId);
+          if(!lecture){
+            return res.status(404).json({
+                message:"Lecture not found"
+            })
+          };
+
+          
     } catch (error) {
         console.log(error);
         return res.status(500).json({

@@ -54,6 +54,13 @@ export const courseApi = createApi({
                 method:"GET"
             }),
             providesTags: ['Refetch_Creator_Course']
+        }),
+        editLecture: builder.mutation({
+            query:({lectureTitle,videoInfo,isPreviewFree,courseId,lectureId,})=>({
+                url:`${courseId}/lecture/${lectureId}`,
+                method:"POST",
+                body:{lectureTitle,videoInfo,isPreviewFree}
+            })
         })
     })
 })

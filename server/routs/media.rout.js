@@ -1,5 +1,5 @@
 import express from "express"
-import upload from "../utils/cloudinary.js"
+import upload from "../utils/multer.js"
 import { uploadMedia } from "../utils/cloudinary.js"
 
 const router = express.Router();
@@ -9,6 +9,7 @@ const videoUpload = async (req,res) => {
         const result = await uploadMedia(req.file.path);
 
         res.status(200).json({
+            success:true,
             message:"File uploaded Succesfully",
             data:result
         })

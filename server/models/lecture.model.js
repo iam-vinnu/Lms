@@ -8,7 +8,7 @@ const lectureSchema = new mongoose.Schema({
      courseTitle:{
        type:mongoose.Schema.Types.ObjectId,
        ref:"Course"
-    },
+    },              
     videoUrl:{
         type:String
     },
