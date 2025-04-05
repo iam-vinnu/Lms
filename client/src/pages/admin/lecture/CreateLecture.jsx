@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import Lecture from './Lecture'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const CreateLecture = () => {
   const [lectureTitle, setLectureTitle] = useState("");
@@ -14,7 +15,7 @@ const CreateLecture = () => {
 
   const [createLecture, { data, isLoading, isSuccess, error }] = useCreateLectureMutation();
   const { data: lectureData, isLoading: lectureLoading, error: lectureError } = useGetLectureQuery(courseId);
-  console.log(lectureData);
+  
 
 
   const createLectureHandler = async () => {
@@ -24,6 +25,7 @@ const CreateLecture = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message);
+      setLectureTitle('');
     }
     if (error) {
       toast.error(error?.data?.message);
@@ -62,7 +64,7 @@ const CreateLecture = () => {
         </div>
         <div className='mt-10'>
           {
-            lectureLoading ? (<p>Lectures loading.....</p>)
+            lectureLoading ? (<p>Loading Lectures....</p>)
               : lectureError ? (<p>Failed to load lectures.</p>) : lectureData.lectures.length === 0 ? <p>No lectures available</p> : 
               lectureData.lectures.map((lecture,index)=>(<Lecture key={lecture._id} lecture={lecture}  courseId={courseId}  index={index} />))
               
@@ -74,3 +76,13 @@ const CreateLecture = () => {
 }
 
 export default CreateLecture
+
+export const LectureItemSkeleton = () => {
+  return (
+    <div className='flex items-center justify-between bg-[#f7f9fa] dark:bg-[#1f1f1f] px-4 py-2 rounded-md my-2'>
+      <div className='flex-1'>
+        <Skeleton className='h-4 w-full mb-1' />
+      </div>
+    </div>
+  )
+}

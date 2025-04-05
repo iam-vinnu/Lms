@@ -4,7 +4,7 @@ const COURSE_API = "http://localhost:8080/api/v1/course/"
 
 export const courseApi = createApi({
     reducerPath: "courseApi",
-    tagTypes: ['Refetch_Creator_Course'],
+    tagTypes: ['Refetch_Creator_Course','Refetch_Lecture'],
     baseQuery: fetchBaseQuery({
         baseUrl: COURSE_API,
         credentials: "include"
@@ -46,21 +46,36 @@ export const courseApi = createApi({
                  method:"POST",
                  body:{lectureTitle}
             }),
-            invalidatesTags: ['Refetch_Creator_Course']
+            invalidatesTags:['Refetch_Lecture']
         }),
         getLecture:builder.query({
             query:(courseId)=>({
                 url:`${courseId}/lecture`,
                 method:"GET"
             }),
-            providesTags: ['Refetch_Creator_Course']
+            providesTags: ['Refetch_Lecture']
         }),
         editLecture: builder.mutation({
-            query:({lectureTitle,videoInfo,isPreviewFree,courseId,lectureId,})=>({
+            query:({lectureTitle,videoInfo,isPreviewFree,courseId,lectureId})=>({
                 url:`${courseId}/lecture/${lectureId}`,
                 method:"POST",
                 body:{lectureTitle,videoInfo,isPreviewFree}
-            })
+            }),
+            invalidatesTags:['Refetch_Lecture']
+        }),
+        removeLecture:builder.mutation({
+            query:(lectureId)=>({
+              url:`/lecture/${lectureId}`,
+              method:"DELETE"
+            }),
+            invalidatesTags:['Refetch_Lecture']
+        }),
+        getLectureById:builder.query({
+            query:(lectureId)=>({
+                url:`/lecture/${lectureId}`,
+                method:"GET"
+            }),
+            providesTags:['Refetch_Lecture']
         })
     })
 })
@@ -71,5 +86,8 @@ export const {
     useEditCourseMutation,
     useGetCourseByIdQuery,
     useCreateLectureMutation,
-    useGetLectureQuery
+    useGetLectureQuery,
+    useEditLectureMutation,
+    useRemoveLectureMutation,
+    useGetLectureByIdQuery
 } = courseApi

@@ -103,7 +103,9 @@ const Navbar = () => {
                     user?.role === "instructor" && <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
+                        <Link to={"admin/course"}>
                         Dashboard
+                        </Link>
                       </DropdownMenuItem>
                     </>
                   }

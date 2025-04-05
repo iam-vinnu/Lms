@@ -4,21 +4,41 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
 import { Switch } from '@/components/ui/switch'
+import { useEditLectureMutation, useGetLectureByIdQuery, useRemoveLectureMutation } from '@/features/api/courseApi'
 import axios from 'axios'
 import { Loader2 } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const MEDIA_API = "http://localhost:8080/api/v1/media"
 
 const LectureTab = () => {
-    const isLoading = false;
+    const navigate = useNavigate();
     const [lectureTitle,setLectureTitle] = useState("");
     const [uploadVideoInfo , setUploadVideoInfo ] = useState(null);
     const [isFree,setIsFree] = useState(false);
     const [mediaProgress , setMediaProgress] = useState(false);
     const [uploadProgress, setUploadProgress ] = useState(0);
     const [btnDisable , setBtnDisable] = useState(true);
+    const {courseId , lectureId} = useParams();
+
+    // const {data:lectureData} = useGetLectureByIdQuery(lectureId);
+    // const lecture = lectureData?.lecture;
+    // useEffect(()=>{
+    //   if(lecture){
+    //     setLectureTitle(lecture.lectureTitle);
+    //     setIsFree(lecture.isPreviewFree);
+    //     setUploadVideoInfo(lecture.videoInfo)
+    //   }
+    // },[lecture]);
+
+
+    const [editLecture , {data,isLoading,error,isSuccess}] = useEditLectureMutation();
+    const [removeLecture,{ 
+        data:removeLectureData,
+        isLoading:removeLectureLoading,isSuccess:removeLectureSuccess,error:removeError}] = useRemoveLectureMutation();
+        
 
     const fileChangeHandler = async(e)=>{
         const file = e.target.files[0];
@@ -48,10 +68,39 @@ const LectureTab = () => {
         }
     }
   
-    const updateHandler = () =>{
+    const updateHandler = async() =>{
         console.log(lectureTitle,uploadVideoInfo,isFree);
-        
-    }
+        await editLecture({
+            lectureTitle,
+            videoInfo:uploadVideoInfo,
+            isPreviewFree:isFree,
+            courseId,
+            lectureId,
+          });
+        };
+
+        const removeLectureHandler = async () => {
+            await removeLecture(lectureId);
+        }
+    
+        useEffect(()=>{
+         if(isSuccess){
+            toast.success(data?.message);
+         }
+         if(error){
+            toast.error(error?.data?.message);
+         }
+        },[isSuccess,error]);
+
+        useEffect(()=>{
+            if(removeLectureSuccess){
+                toast.success(removeLectureData?.message);
+                navigate(`/admin/course/${courseId}/lecture`);
+            }
+            if(removeError){
+                toast.error(removeError?.data?.message); 
+            }
+        },[removeLectureSuccess,removeError])
 
   return (
     <Card>
@@ -61,7 +110,16 @@ const LectureTab = () => {
                 <CardDescription>Make changes and click save when done</CardDescription>
             </div>
             <div className='flex items-center gap-2'>
-                <Button variant="destructive">Remove Lecture</Button>
+                <Button variant="destructive"
+                 onClick={removeLectureHandler} >
+                    {
+                        removeLectureLoading ? (
+                         <>  <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait....</>
+                        ) : (
+                            'Remove Lecture'
+                        )
+                    }
+                 </Button>
             </div>
         </CardHeader>
         <CardContent>
