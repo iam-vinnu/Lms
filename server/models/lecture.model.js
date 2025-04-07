@@ -5,7 +5,7 @@ const lectureSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-     courseTitle:{
+     course:{
        type:mongoose.Schema.Types.ObjectId,
        ref:"Course"
     },              
