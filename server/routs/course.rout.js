@@ -13,7 +13,6 @@ router.route('/:courseId').get(isAuthenticated, getCourseById);
 
 
 // lecture routes
-
 router.route('/:courseId/lecture').post(isAuthenticated, createLecture);
 router.route('/:courseId/lecture').get(isAuthenticated, getLecture);
 router.route('/:courseId/lecture/:lectureId').post(isAuthenticated, editLecture);
