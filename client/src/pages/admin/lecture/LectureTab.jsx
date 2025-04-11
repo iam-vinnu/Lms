@@ -11,7 +11,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
-const MEDIA_API = "http://localhost:8080/api/v1/media"
+const MEDIA_API = "http://localhost:8080/api/v1/media";
 
 const LectureTab = () => {
     const navigate = useNavigate();
@@ -23,15 +23,15 @@ const LectureTab = () => {
     const [btnDisable , setBtnDisable] = useState(true);
     const {courseId , lectureId} = useParams();
 
-    // const {data:lectureData} = useGetLectureByIdQuery(lectureId);
-    // const lecture = lectureData?.lecture;
-    // useEffect(()=>{
-    //   if(lecture){
-    //     setLectureTitle(lecture.lectureTitle);
-    //     setIsFree(lecture.isPreviewFree);
-    //     setUploadVideoInfo(lecture.videoInfo)
-    //   }
-    // },[lecture]);
+    const {data:lectureData} = useGetLectureByIdQuery(lectureId);
+    useEffect(()=>{
+      if(lectureData?.lecture){
+       const {lectureTitle , isPreviewFree , videoInfo} = lectureData?.lecture
+        setLectureTitle(lectureTitle);
+        setIsFree(isPreviewFree);
+        setUploadVideoInfo(videoInfo); 
+      }
+    },[lectureData]);
 
 
     const [editLecture , {data,isLoading,error,isSuccess}] = useEditLectureMutation();
@@ -53,7 +53,7 @@ const LectureTab = () => {
                     }
                 });
              if(res?.data?.success){
-                console.log(res);
+                
                 setUploadVideoInfo({videoUrl:res?.data?.data?.url , publicId:res?.data?.data?.public_id});
                 setBtnDisable(false);
                 toast.success(res?.data?.message);
@@ -98,19 +98,20 @@ const LectureTab = () => {
                 navigate(`/admin/course/${courseId}/lecture`);
             }
             if(removeError){
-                toast.error(removeError?.data?.message); 
+                toast.error(removeError?.data?.message);
             }
-        },[removeLectureSuccess,removeError])
+        },[removeLectureSuccess,removeError]);
 
   return (
     <Card>
-        <CardHeader className="flex justify-between" >
+        <CardHeader className="flex justify-between">
             <div>
                 <CardTitle>Edit Lecture</CardTitle>
                 <CardDescription>Make changes and click save when done</CardDescription>
             </div>
             <div className='flex items-center gap-2'>
                 <Button variant="destructive"
+                 
                  onClick={removeLectureHandler} >
                     {
                         removeLectureLoading ? (
@@ -154,7 +155,7 @@ const LectureTab = () => {
                   )
             }
             <div className='mt-4'>
-               <Button onClick={updateHandler} >
+               <Button onClick={updateHandler} disabled={btnDisable} >
                 {
                    isLoading ? (
                     <Loader2 className='mr-2 h-4 w-4 animate-spin' />
