@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useEditCourseMutation, useGetCourseByIdQuery } from '@/features/api/courseApi';
+import { useEditCourseMutation, useGetCourseByIdQuery, usePublishCourseMutation } from '@/features/api/courseApi';
 import { Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -23,7 +23,8 @@ const CourseTab = () => {
     coursePrice: "",
     courseThumbnail: ""
   });
-  const {data:courseData,isLoading:courseLoading} = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true});
+  const {data:courseData,isLoading:courseLoading , refetch} = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true});
+  const [publishCourse,{}] = usePublishCourseMutation();
 
   useEffect(()=>{
     if(courseData?.course){
@@ -74,8 +75,20 @@ const CourseTab = () => {
     formData.append("courseLevel", input.courseLevel);
     formData.append("coursePrice", input.coursePrice);
     formData.append("courseThumbnail", input.courseThumbnail);
-    await editCourse({formData ,courseId}  );
+    await editCourse({formData ,courseId});
     
+  }
+
+  const publishStatusHandler = async (action) =>{
+       try {
+        const response = await publishCourse({courseId , query:action});
+       if(response?.data){
+        refetch();
+        toast.success(response?.data?.message);
+       }
+       } catch (error) {
+        toast.error("Failed to Publish or Unpublish the course");
+       }
   }
 
   useEffect(()=>{
@@ -88,9 +101,9 @@ const CourseTab = () => {
       toast.error(error.data.message || "Failed to update course");
     }
   },[isSuccess,error]);
-  const isPublished = true;
 
   if(courseLoading) return <Loader2 className='h-4 w-4 animate-spin'/>
+   
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
@@ -101,9 +114,9 @@ const CourseTab = () => {
           </CardDescription>
         </div>
         <div className='space-x-2'>
-          <Button variant='outline'>
+          <Button variant='outline' onClick={()=>publishStatusHandler(courseData?.course.isPublished ? "false" : "true")}>
             {
-              isPublished ? "Unpublished" : "Published"
+             courseData?.course.isPublished ? "Unpublished" : "Published"
             }
           </Button>
 
