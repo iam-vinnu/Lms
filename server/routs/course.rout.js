@@ -18,6 +18,6 @@ router.route('/:courseId/lecture').get(isAuthenticated, getLecture);
 router.route('/:courseId/lecture/:lectureId').post(isAuthenticated, editLecture);
 router.route('/lecture/:lectureId').delete(isAuthenticated,removeLecture);
 router.route('/lecture/:lectureId').get(isAuthenticated,getLectureById);
-router.route('/:courseId/lecture').put(isAuthenticated,togglePublishCourse);
+router.route('/:courseId').patch(isAuthenticated,togglePublishCourse);
 
 export default router;
