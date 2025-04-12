@@ -18,8 +18,8 @@
 
 **Frontend**
 - React.js
-- Redux (if used)
-- Tailwind CSS / CSS Modules *(specify your styling tool)*
+- Redux/RTK query
+- Tailwind CSS 
 
 **Backend**
 - Node.js
@@ -45,7 +45,45 @@ npm install
 # Install frontend dependencies
 cd ../client
 npm install
+```
 
+---
 
+## 🧪 Usage
 
+```bash
+# Start backend server
+cd server
+npm run dev
 
+# Start frontend
+cd ../client
+npm start
+
+```
+---
+## 📂 Project Structure
+
+```bash
+
+skilltree/
+├── client/          # React frontend
+└── server/          # Express backend with MongoDB
+```
+---
+
+## 🙌 Contributing
+Pull requests are welcome! If you’d like to contribute, feel free to fork the repo and submit a PR with improvements, bug fixes, or new features.
+
+---
+
+## 💬 Connect
+Built with ❤️ by [Vinnuu]
+Feel free to reach out on LinkedIn or raise an issue on GitHub!
+
+```yaml
+
+---
+
+Let me know if you want a version with screenshots, badges, or live demo link placeholder
+```
