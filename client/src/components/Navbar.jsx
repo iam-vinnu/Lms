@@ -59,11 +59,13 @@ const Navbar = () => {
       {/* for desktop */}
       <div className='max-w-6xl mx-auto hidden md:flex justify-between items-center gap-10 h-full'>
 
-        <div className='flex items-center gap-2 cursor-pointer'>
           {/*        Website logo         */}
+      <Link to={'/'}>
+        <div className='flex items-center gap-2 cursor-pointer'>
           <School size={"30"} />
-          <h1 className='hidden md:block font-extrabold text-2xl'>E-learning</h1>
+          <h1 className='hidden md:block font-extrabold text-2xl'>SkillTree</h1>
         </div>
+      </Link>
 
         <div className='flex items-center gap-5'>
           {/*      User icon and dark mode icon       */}
