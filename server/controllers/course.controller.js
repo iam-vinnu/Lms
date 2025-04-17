@@ -30,6 +30,28 @@ export const createCourse = async(req,res)=>{
     }
 };
 
+export const getPublishedCourse = async (req,res) => {
+    try {
+
+        const publishedCourse = await Course.find({isPublished:true}).populate({path:"creator", select:"name photoUrl"});
+        if(!publishedCourse){
+            return res.status(404).json({
+                message:"There Is No Published Course"
+            })
+        }
+
+        return res.status(200).json({
+            publishedCourse
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message:"Couldn't fetch the publish course"
+        })
+        
+    }
+}
+
 export const getCreatorCourses = async (req,res) => {
     try {
         const userId = req.id;
@@ -272,8 +294,8 @@ export const removeLecture = async (req,res) => {
 
  export const togglePublishCourse = async (req,res) => {
     try {
-        const {courseId} = re.params;
-        const {publis} = req.query; // true,false
+        const {courseId} = req.params;
+        const {publish} = req.query; // true,false
         const course = await Course.findById(courseId);
         if(!course){
             return res.status(404).json({
@@ -283,7 +305,7 @@ export const removeLecture = async (req,res) => {
 
         // publish status based on the query
 
-        course.isPublished = publis === "true";
+        course.isPublished = publish === "true";
         await course.save();
 
         const statusMessage = course.isPublished ? "Published" : "Unpublished";
