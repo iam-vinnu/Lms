@@ -1,21 +1,32 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react'
 import Course from './Course';
+import { useGetPublishCourseQuery } from '@/features/api/courseApi';
+import { LogIn } from 'lucide-react';
 
-const courses = [1,2,3,4,5,6];
+
 
 const Courses = () => {
-    const isLoading = false ;
+  const {data:publishedCourseData ,
+         isLoading : publishedCourseLoading,
+         isSuccess:publishedCourseSuccess,
+         isError
+  } = useGetPublishCourseQuery();
+  console.log(publishedCourseData);
+  
+
+  if(isError) return <h1>Some error occured</h1>
+
   return (
     <div className='bg-gray-50'>
         <div className='max-w-6xl mx-auto p-6'>
             <h2 className='font-bold text-3xl text-center mb-10'>Our Courses</h2>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
             {
-                isLoading ? (
+                publishedCourseLoading ? (
                     Array.from({length:8}).map((_,index) =>(<CourseSkeleton key={index}/>))
             ) : (
-               courses.map((_,index)=>(<Course key={index}/>))
+               publishedCourseData?.publishedCourse && publishedCourseData?.publishedCourse.map((course,index)=>(<Course key={index} course={course}/>))
             )
             }
             </div>

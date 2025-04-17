@@ -59,13 +59,13 @@ const Navbar = () => {
       {/* for desktop */}
       <div className='max-w-6xl mx-auto hidden md:flex justify-between items-center gap-10 h-full'>
 
-          {/*        Website logo         */}
-      <Link to={'/'}>
-        <div className='flex items-center gap-2 cursor-pointer'>
-          <School size={"30"} />
-          <h1 className='hidden md:block font-extrabold text-2xl'>SkillTree</h1>
-        </div>
-      </Link>
+        {/*        Website logo         */}
+        <Link to={'/'}>
+          <div className='flex items-center gap-2 cursor-pointer'>
+            <School size={"30"} />
+            <h1 className='hidden md:block font-extrabold text-2xl'>SkillTree</h1>
+          </div>
+        </Link>
 
         <div className='flex items-center gap-5'>
           {/*      User icon and dark mode icon       */}
@@ -106,7 +106,7 @@ const Navbar = () => {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
                         <Link to={"admin/course"}>
-                        Dashboard
+                          Dashboard
                         </Link>
                       </DropdownMenuItem>
                     </>
