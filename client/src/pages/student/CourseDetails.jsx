@@ -1,15 +1,23 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@radix-ui/react-separator'
+import PurchasedButton from '@/components/PurchasedButton'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { useGetCourseByIdQuery } from '@/features/api/courseApi'
+
 import { BadgeInfo, PlayCircle } from 'lucide-react'
 import React from 'react'
+import { useParams } from 'react-router-dom'
 
 const CourseDetails = () => {
+  const purchasedCourse = false;
+  const {courseId} = useParams();
+  
   return (
     <div className='mt-24 space-y-5'>
       <div className='bg-[#2d2f31] text-white'>
         <div className='max-w-7xl mx-auto py-8 px-4 md:px-8 flex flex-col gap-2'>
-          <h1 className='font-bold text-2xl md:text-3xl'>Course Title</h1>
-          <p className='text-base md:text-lg'>Course Sub-title</p>
+          <h1 className='font-bold text-2xl md:text-3xl'>Title</h1>
+          <p className='text-base md:text-lg'>Sub title</p>
           <p>Create by{''} <span className='text-[#c0c4fc] underline italic'>Binay</span></p>
           <div className='flex items-center gap-2 text-sm'>
             <BadgeInfo size={16} />
@@ -44,15 +52,27 @@ const CourseDetails = () => {
           </Card>
         </div>
         <div className='w-full lg:w-1/3'>
-           <Card>
+          <Card>
             <CardContent className="p-4 flex flex-col">
-             <div className='w-full aspect-video'>
-              Video ayega
-             </div>
-             <h1>Lecture Title</h1>
-             <Separator className='my-2' />
+              <div className='w-full aspect-video'>
+                Video ayega
+              </div>
+              <h1>Lecture Title</h1>
+              <Separator className="my-2" />
+              <h1 className="text-lg md:text-xl font-semibold">Course Price</h1>
             </CardContent>
-           </Card>
+            <CardFooter className="flex justify-center p-4">
+              {
+                purchasedCourse ? (
+                  <Button className="w-full">
+                    Countineu Course
+                  </Button>
+                ) : (
+                 <PurchasedButton/>
+                )
+              }
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </div>

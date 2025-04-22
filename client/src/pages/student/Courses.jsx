@@ -26,7 +26,7 @@ const Courses = () => {
                 publishedCourseLoading ? (
                     Array.from({length:8}).map((_,index) =>(<CourseSkeleton key={index}/>))
             ) : (
-               publishedCourseData?.publishedCourse && publishedCourseData?.publishedCourse.map((course,index)=>(<Course key={index} course={course}/>))
+               publishedCourseData?.publishedCourse && publishedCourseData?.publishedCourse.map((course,_id)=>(<Course key={_id} course={course}/>))
             )
             }
             </div>
