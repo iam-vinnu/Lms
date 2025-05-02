@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 const CourseDetails = () => {
   const purchasedCourse = false;
   const {courseId} = useParams();
-  
+
   return (
     <div className='mt-24 space-y-5'>
       <div className='bg-[#2d2f31] text-white'>
