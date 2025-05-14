@@ -1,21 +1,24 @@
 import Stripe from 'stripe'
 import {Course} from '../models/course.model.js'
 import {purchaseCourse} from '../models/purchaseCourse.model.js'
-const stripe = new Stripe(process.env.STRIPE_SECRETE_KEY);
+import { Lecture } from '../models/lecture.model.js';
+import { User } from '../models/user.model.js';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (req,res) => {
     try {
         const userId = req.id;
         const {courseId} = req.body;
 
-        const course = Course.findById(courseId);
+        const course = await Course.findById(courseId);
         if(!course){
             return res.status(404).json({
                 message:"Course not found!"
             })
         }
 
-        const newCourse = new purchaseCourse({
+        const newPurchase = new purchaseCourse({
              courseId,
              userId,
              amount:course.coursePrice,
@@ -39,8 +42,8 @@ export const createCheckoutSession = async (req,res) => {
               },
             ],
             mode: "payment",
-            success_url: `${process.env.FRONTEND_URL}/course-progress/${courseId}`, // once payment successful redirect to course progress page
-            cancel_url: `${process.env.FRONTEND_URL}/course-detail/${courseId}`,
+            success_url: `http://localhost:5173/course-progress/${courseId}`, // once payment successful redirect to course progress page
+            cancel_url: `http://localhost:5173/course-detail/${courseId}`,
             metadata: {
               courseId: courseId,
               userId: userId,
@@ -96,7 +99,7 @@ export const stripeWebhook = async (req, res) => {
     try {
       const session = event.data.object;
 
-      const purchase = await CoursePurchase.findOne({
+      const purchase = await purchaseCourse.findOne({
         paymentId: session.id,
       }).populate({ path: "courseId" });
 
@@ -139,3 +142,29 @@ export const stripeWebhook = async (req, res) => {
   }
   res.status(200).send();
 };
+
+export const getCourseDetailsWithPurchaseStatus = async (req,res) => {
+  try {
+    const {courseId} = req.params;
+    const userId = req.id;
+
+    const course = await Course.findById(courseId)
+      .populate({ path: "creator" })
+      .populate({ path: "lectures" });
+
+    const purchased = await CoursePurchase.findOne({ userId, courseId });
+    console.log(purchased);
+
+    if (!course) {
+      return res.status(404).json({ message: "course not found!" });
+    }
+
+    return res.status(200).json({
+      course,
+      purchased: !!purchased, // true if purchased, false otherwise
+    });
+  } catch (error) {
+    console.error("Error in fetching purchased course" , error);
+    return res.status(500).json({message:"Internal server error"});
+  }
+}
