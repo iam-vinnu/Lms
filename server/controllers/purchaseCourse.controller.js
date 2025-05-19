@@ -152,8 +152,8 @@ export const getCourseDetailsWithPurchaseStatus = async (req,res) => {
       .populate({ path: "creator" })
       .populate({ path: "lectures" });
 
-    const purchased = await CoursePurchase.findOne({ userId, courseId });
-    console.log(purchased);
+    const purchased = await purchaseCourse.findOne({ userId, courseId });
+    
 
     if (!course) {
       return res.status(404).json({ message: "course not found!" });
@@ -165,6 +165,23 @@ export const getCourseDetailsWithPurchaseStatus = async (req,res) => {
     });
   } catch (error) {
     console.error("Error in fetching purchased course" , error);
+    return res.status(500).json({message:"Internal server error"});
+  }
+}
+
+export const getAllPurchasedCourse = async (req,res) => {
+  try {
+    const purchasedCourses = await purchaseCourse.find({status:"completed"}).populate("courseId");
+     if (!purchasedCourses) {
+      return res.status(404).json({
+        purchasedCourses: [],
+      });
+    }
+    return res.status(200).json({
+      purchasedCourses,
+    });
+  } catch (error) {
+    console.log("Error in fetching all the purchased course because  ",error);
     return res.status(500).json({message:"Internal server error"});
   }
 }

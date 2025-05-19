@@ -6,6 +6,7 @@ import userRoute from './routs/user.rout.js'
 import courseRoute from './routs/course.rout.js'
 import mediaRoute from './routs/media.rout.js'
 import purchaseRoute from './routs/purchase.rout.js'
+import courseProgressRoute from './routs/courseProgress.rout.js'
 import cookieParser from 'cookie-parser';
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/v1/media' , mediaRoute)
 app.use('/api/v1/user',userRoute);
 app.use('/api/v1/course',courseRoute);
 app.use('/api/v1/purchase' , purchaseRoute);
+app.use('/api/v1/progress' , courseProgressRoute);
 
 
 
